@@ -47,6 +47,8 @@ scrapy shell https://www.whitehouse.gov/briefing-room/weekly-address
 ### Scrapy bugs notes
 I was trying to use scrapy with Python3 from Anaconda, but I was getting weird errors:
 I had to do `conda uninstall icu` and `conda install -c conda-forge icu=56` because I was getting the error `ImportError: libicui18n.so.56: cannot open shared object file: No such file or directory ubuntu` when I tried to do `scrapy shell`.
-Then I started getting something else like `cffi library '_openssl' has no function`, so I uninstalled scrapy from anaconda and installed it with the Python2 Ubuntu system distro, and it worked.  Go figure ¯\_(ツ)_/¯.
+Then I started getting something else like `cffi library '_openssl' has no function`, so I uninstalled scrapy from anaconda and installed it with the Python2 Ubuntu system distro, and it worked.  Go figure ¯\\_(ツ)_/¯.
 
 ## Download videos
+
+Next up is downloading the videos.
