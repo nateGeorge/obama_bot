@@ -15,11 +15,12 @@ mainFilePath = config['file_dir']
 
 def download_file(url):
     local_filename = url.split('/')[-1]
+    print 'downloading', local_filename
     # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
     response = requests.head(testFile)
     fsize = int(response.headers['Content-Length']) # I think file size in bytes?
-    with open(os.path.join(mainFilePath, local_filename), 'wb') as f:
+    with open(os.path.join('videos', local_filename), 'wb') as f: # could also use mainFilePath here
         for chunk in tqdm(r.iter_content(chunk_size=1024), total=fsize/1024): # I think chunk_size is in bytes?
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
@@ -33,7 +34,7 @@ with open(newest) as prez:
 
 # test downloading
 testFile = weekly[0]['videoLink']
-#download_file(testFile)
+download_file(testFile)
 
-for w in weekly:
-    download_file(w['videoLink'])
+# for w in weekly:
+#     download_file(w['videoLink'])
