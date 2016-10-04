@@ -7,11 +7,11 @@ Text to video speech (TTVS) trained on Obama's weekly addresses.
   - scrapy or requests to get video links and transcriptions
   - use requests or bash to get videos
 
+* Extract audio from videos
+
 * Crop videos so a consistent view of Obama's face is obtained.
   - use openCV
   - ignore video clips where Obama's face is not present
-
-* Extract audio from videos
 
 * Get words and times from IBM Watson (bluemix)
   - Prototype on one video
@@ -51,4 +51,18 @@ Then I started getting something else like `cffi library '_openssl' has no funct
 
 ## Download videos
 
-Next up is downloading the videos.
+Next up is downloading the videos.  The file `download_files.py` in the `scrapy-prez-vids` will do this.
+Make sure you `pip install tqdm requests json`.
+
+```bash
+cd scrape-prez-vids
+python download_files.py
+```
+
+## Cropping vids
+
+Now we need to make sure we have a consistent picture of Barry's face for the neural net.  I used openCV face detection, so you will need to install that to run these scripts.
+
+```bash
+
+```
