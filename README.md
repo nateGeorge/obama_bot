@@ -9,6 +9,8 @@ Text to video speech (TTVS) trained on Obama's weekly addresses.
 
 * Extract audio from videos
 
+* Feed audio to IBM Bluemix (Watson) with api
+
 * Crop videos so a consistent view of Obama's face is obtained.
   - use openCV
   - ignore video clips where Obama's face is not present
@@ -58,6 +60,10 @@ Make sure you `pip install tqdm requests json`.
 cd scrape-prez-vids
 python download_files.py
 ```
+
+## Extracting audio
+
+Extract audio from files by running `extract_audio.py` in the `scrape-prez-vids` folder.  You will need to sign up for [IBM Bluemix](https://github.com/watson-developer-cloud/speech-to-text-nodejs) and set up and app (then get creds with `cf env <application-name>`), and I would store your password and username in your `~/.profile` config file or grab them dynamically with `cf env <application-name>`.  Then your credentials aren't on github, and you can get them dynamically in scripts.
 
 ## Cropping vids
 
