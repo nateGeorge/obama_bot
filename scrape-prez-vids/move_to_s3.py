@@ -10,11 +10,11 @@ class awsS3(object):
         # set env variable AWS_CREDENTIAL_FILE
         # http://stackoverflow.com/questions/5396932/why-are-no-amazon-s3-authentication-handlers-ready
         self.conn = boto.connect_s3()
-        self.bucket = conn.get_bucket(bucket_name)
+        self.bucket = self.conn.get_bucket(bucket_name)
         bucket_location = self.bucket.get_location()
         if bucket_location: # fix from https://github.com/boto/boto/issues/2207#issuecomment-60682869
             self.conn = boto.s3.connect_to_region(bucket_location)
-            self.bucket = conn.get_bucket(bucket_name)
+            self.bucket = self.conn.get_bucket(bucket_name)
 
     def upload_big_file(self, source_path, verbose=True):
         source_size = os.path.getsize(source_path)
@@ -43,3 +43,5 @@ class awsS3(object):
 if __name__ == "__main__":
     vids = list(glob.iglob('videos/*.mp4'))
     source_path = vids[1]
+    aws = awsS3()
+    aws.upload_big_file(source_path)
