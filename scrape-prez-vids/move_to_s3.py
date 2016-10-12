@@ -42,6 +42,10 @@ class awsS3(object):
 
 if __name__ == "__main__":
     vids = list(glob.iglob('videos/*.mp4'))
-    source_path = vids[1]
+    # for testing
+    # source_path = vids[1]
+    # aws.upload_big_file(source_path)
     aws = awsS3()
-    aws.upload_big_file(source_path)
+    for v in vids:
+        print 'on file:', v
+        aws.upload_big_file(v)
