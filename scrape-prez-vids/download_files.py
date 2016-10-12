@@ -27,7 +27,7 @@ def download_file(url):
     print 'downloading', local_filename
     # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
-    response = requests.head(testFile)
+    response = requests.head(url)
     fsize = int(response.headers['Content-Length']) # I think file size in bytes?
     # check if file is already fully downloaded, and skip this file if so
     vidPath = os.path.join('videos', local_filename)
