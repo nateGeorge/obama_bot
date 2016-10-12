@@ -5,8 +5,10 @@ import requests
 import json
 from tqdm import tqdm
 import os
+import re
 import glob
 import argparse as ap
+from move_to_s3 import awsS3
 
 parser = ap.ArgumentParser(description='Download Obamas weekly addresses')
 parser.add_argument('-d', '--tqdm', default=False)
@@ -16,6 +18,8 @@ args = vars(parser.parse_args())
 tqdm_on = args['tqdm']
 is_test = args['test']
 
+aws = awsS3()
+
 scrapeDir = './scrapy/scrape_prez/'
 with open(scrapeDir + 'config.json') as f:
     config = json.load(f)
@@ -24,6 +28,8 @@ mainFilePath = config['file_dir']
 
 def download_file(url):
     local_filename = url.split('/')[-1]
+    if re.search('VPOTUS', local_filename) is not None:
+        continue # don't need no Joe Biden! lahooo...sah her
     print 'downloading', local_filename
     # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
@@ -46,6 +52,12 @@ def download_file(url):
             for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
 
+    # upload to aws then remove from local disk
+    aws.upload_big_file(vidPath)
+    print 'finished uploading'
+    os.remove(vidPath)
+    print 'deleted'
+    time.sleep(10)
     return local_filename
 
 # get latest output file
