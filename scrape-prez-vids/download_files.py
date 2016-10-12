@@ -6,6 +6,15 @@ import json
 from tqdm import tqdm
 import os
 import glob
+import argparse as ap
+
+parser = ap.ArgumentParser(description='Download Obamas weekly addresses')
+parser.add_argument('-d', '--tqdm', default=False)
+parser.add_argument('-t', '--test', default=False)
+
+args = vars(parser.parse_args())
+tqdm_on = args['tqdm']
+is_test = args['test']
 
 scrapeDir = './scrapy/scrape_prez/'
 with open(scrapeDir + 'config.json') as f:
@@ -20,11 +29,23 @@ def download_file(url):
     r = requests.get(url, stream=True)
     response = requests.head(testFile)
     fsize = int(response.headers['Content-Length']) # I think file size in bytes?
-    with open(os.path.join('videos', local_filename), 'wb') as f: # could also use mainFilePath here
-        for chunk in tqdm(r.iter_content(chunk_size=1024), total=fsize/1024): # I think chunk_size is in bytes?
-            if chunk: # filter out keep-alive new chunks
+    # check if file is already fully downloaded, and skip this file if so
+    vidPath = os.path.join('videos', local_filename)
+    if os.path.exists(vidPath):
+        if fsize == os.path.getsize(vidPath):
+            print 'file already downloaded'
+            return None
+
+    with open(vidPath, 'wb') as f: # could also use mainFilePath here
+        if tqdm_on:
+            for chunk in tqdm(r.iter_content(chunk_size=1024), total=fsize/1024): # I think chunk_size is in bytes?
+                if chunk: # filter out keep-alive new chunks
+                    f.write(chunk)
+                    #f.flush() commented by recommendation from J.F.Sebastian
+        else:
+            for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
-                #f.flush() commented by recommendation from J.F.Sebastian
+
     return local_filename
 
 # get latest output file
@@ -33,8 +54,16 @@ with open(newest) as prez:
     weekly = json.load(prez)
 
 # test downloading
-testFile = weekly[0]['videoLink']
-download_file(testFile)
-
-# for w in weekly:
-#     download_file(w['videoLink'])
+if is_test:
+    i = 0
+    fn = None
+    while fn is None:
+        testFile = weekly[i]['videoLink']
+        fn = download_file(testFile)
+        i += 1
+else:
+    fns = []
+    for w in weekly:
+        fn = download_file(w['videoLink'])
+        if fn is not None:
+            fns.append(fn)
