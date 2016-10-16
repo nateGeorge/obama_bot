@@ -37,8 +37,19 @@ class awsS3(object):
 
     def get_all_files(self):
         # get all files in bucket
+        ret_files = []
         for key in self.bucket.list():
-            print key.name.encode('utf-8')
+            ret_files.append(key.name.encode('utf-8'))
+
+        return ret_files
+
+    def get_bucket_size(self):
+        # returns total size of all things in bucket (up to 1000 things)
+        size = 0
+        for key in self.bucket.list():
+            size += key.size
+
+        return size
 
 if __name__ == "__main__":
     vids = list(glob.iglob('videos/*.mp4'))
@@ -46,6 +57,7 @@ if __name__ == "__main__":
     # source_path = vids[1]
     # aws.upload_big_file(source_path)
     aws = awsS3()
-    for v in vids:
-        print 'on file:', v
-        aws.upload_big_file(v)
+
+    # for v in vids:
+    #     print 'on file:', v
+    #     aws.upload_big_file(v)
